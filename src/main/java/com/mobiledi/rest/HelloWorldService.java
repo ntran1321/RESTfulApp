@@ -52,7 +52,7 @@ public class HelloWorldService {
 		try {
 			System.out.println("Uploading a new object to S3 from a file\n");
 			File file = new File(fileDetail.getFileName());
-			s3client.putObject(new PutObjectRequest(bucketName, keyName, file));
+			s3client.putObject(new PutObjectRequest(bucketName, keyName, file.getAbsolutePath()));
 
 		} catch (AmazonServiceException ase) {
 			System.out.println("Caught an AmazonServiceException");
