@@ -24,7 +24,6 @@ import com.sun.jersey.core.header.FormDataContentDisposition;
 public class HelloWorldService {
  
 	@GET
-	@Path("ping")
 	public Response getMsg() {
  
 		String output = "Hello world ";
