@@ -4,11 +4,9 @@ import java.io.File;
 import java.io.InputStream;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -17,6 +15,9 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.Bucket;
+import com.amazonaws.services.s3.model.CreateBucketRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
@@ -45,13 +46,20 @@ public class HelloWorldService {
 	public void uploadFileToS3(InputStream uploadedInputStream, FormDataContentDisposition fileDetail){
 		System.out.println("uploadFileToS3");
     	AmazonS3 s3client = new AmazonS3Client(new ProfileCredentialsProvider());
-    	String bucketName = "ntran1321-profilepics";
-    	String keyName = "profilepic-03";
+    	String bucketName = "ntran1321-uploads";
+    	String keyName = "Beijing.jpg";
 		try {
+//			CreateBucketRequest createBucket = new CreateBucketRequest(bucketName);
+//			Bucket newBucket = s3client.createBucket(createBucket);
 			System.out.println("Uploading a new object to S3 from a file\n");
 			File file = new File(fileDetail.getFileName());
 			System.out.println(file.getAbsolutePath());
-//			s3client.putObject(new PutObjectRequest(bucketName, keyName, file.getAbsolutePath()));
+			
+			PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, keyName, uploadedInputStream, new ObjectMetadata());
+			ObjectMetadata omd = new ObjectMetadata();
+			omd.setContentLength(file.length());
+			putObjectRequest.withMetadata(omd);
+			s3client.putObject(putObjectRequest);
 
 		} catch (AmazonServiceException ase) {
 			System.out.println("Caught an AmazonServiceException");
