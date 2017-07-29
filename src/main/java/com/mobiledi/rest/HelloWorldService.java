@@ -26,11 +26,9 @@ public class HelloWorldService {
  
 	@GET
 	public Response getMsg() {
- 
 		String output = "Hello world ";
  
 		return Response.status(200).entity(output).build();
- 
 	}
 	
 	@POST
@@ -48,11 +46,12 @@ public class HelloWorldService {
 		System.out.println("uploadFileToS3");
     	AmazonS3 s3client = new AmazonS3Client(new ProfileCredentialsProvider());
     	String bucketName = "ntran1321-profilepics";
-    	String keyName = "profilepic-01";
+    	String keyName = "profilepic-03";
 		try {
 			System.out.println("Uploading a new object to S3 from a file\n");
 			File file = new File(fileDetail.getFileName());
-			s3client.putObject(new PutObjectRequest(bucketName, keyName, file.getAbsolutePath()));
+			System.out.println(file.getAbsolutePath());
+//			s3client.putObject(new PutObjectRequest(bucketName, keyName, file.getAbsolutePath()));
 
 		} catch (AmazonServiceException ase) {
 			System.out.println("Caught an AmazonServiceException");
