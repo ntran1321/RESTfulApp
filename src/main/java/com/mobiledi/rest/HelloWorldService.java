@@ -15,7 +15,9 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.Bucket;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.CreateBucketRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -47,7 +49,7 @@ public class HelloWorldService {
 		System.out.println("uploadFileToS3");
     	AmazonS3 s3client = new AmazonS3Client(new ProfileCredentialsProvider());
     	String bucketName = "ntran1321-uploads";
-    	String keyName = "Beijing.jpg";
+    	String keyName = fileDetail.getFileName();
 		try {
 //			CreateBucketRequest createBucket = new CreateBucketRequest(bucketName);
 //			Bucket newBucket = s3client.createBucket(createBucket);
@@ -55,10 +57,14 @@ public class HelloWorldService {
 			File file = new File(fileDetail.getFileName());
 			System.out.println(file.getAbsolutePath());
 			
-			PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, keyName, uploadedInputStream, new ObjectMetadata());
 			ObjectMetadata omd = new ObjectMetadata();
 			omd.setContentLength(file.length());
+			PutObjectRequest putObjectRequest = 
+					new PutObjectRequest(bucketName, keyName, uploadedInputStream, omd);
 			putObjectRequest.withMetadata(omd);
+			putObjectRequest.setCannedAcl(CannedAccessControlList.PublicRead);
+			
+			System.out.println(putObjectRequest.getFile());
 			s3client.putObject(putObjectRequest);
 
 		} catch (AmazonServiceException ase) {
